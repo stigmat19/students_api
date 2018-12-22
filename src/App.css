@@ -1,0 +1,35 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+}
+
+ul li{
+  list-style-type: none;
+}
+
+button{
+  height: 50px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #0094a7;
+  border: none;
+  font-size: 18px;
+  padding: 10px;
+  display: block;
+  margin: 10px auto;
+  color: #fff;
+  cursor: pointer;
+}
+
+body{
+  font-size: 16px;
+  overflow-x: hidden;
+}
+.Menu-and-Table{
+  display: flex;
+  height: calc(100vh - 83px);
+  background-color: #2b2b2b;
+}

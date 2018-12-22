@@ -1,0 +1,6 @@
+.SideBar__wrap{
+  display: flex;
+}
+.SideBar__wrap .Menu-and-Table{
+  flex-grow: 1;
+}

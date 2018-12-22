@@ -1,0 +1,36 @@
+.TableStudents__wrap{
+  width: calc(100vw - 250px);
+  padding: 20px;
+  color: #fff;
+  display: flex;
+  justify-content: flex-start;
+  overflow: scroll;
+}
+.TableStudents__wrap table{
+  border-collapse: collapse;
+  text-align: center;
+}
+.TableStudents__wrap table tr{
+  border: 1px solid #fff;
+}
+.TableStudents__wrap table tr:hover{
+  background-color: #333;
+}
+.TableStudents__wrap table tr:hover{
+  background-color: #6b6b6b;
+}
+.TableStudents__wrap table tr td{
+  padding: 5px;
+  height: 40px;
+  border: 1px solid #fff;
+  min-width: 95px;
+}
+.TableStudents__wrap table tr td input[type=checkbox]{
+
+}
+.TableStudents__wrap--students{
+
+}
+.TableStudents__wrap--students p{
+  height: 40px;
+}
