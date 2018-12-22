@@ -1,0 +1,19 @@
+.GroupList__wrap{
+  width: 200px;
+  background-color: #171717;
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  /*transition: .2s;*/
+}
+.GroupList__wrap ul{
+  padding: 15px;
+}
+.GroupList__wrap ul li{
+  width: 150px;
+  background-color: #0094a7;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  cursor: pointer;
+}
