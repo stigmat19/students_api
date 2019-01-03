@@ -1,5 +1,5 @@
 import React from 'react';
-import './TableStudents.css';
+import './TableStudents.scss';
 import PropTypes from "prop-types";
 import Modal from "../Modal/Modal";
 
@@ -49,9 +49,7 @@ class TableStudents extends React.PureComponent {
             email: 'stigmat19@yanddex.ru',
             groupID: 1
         },
-        home: [
-
-        ]
+        home: []
     };
 
     getPersonInfo = (e) => {
@@ -79,12 +77,12 @@ class TableStudents extends React.PureComponent {
 
         let lessons = [];
 
-        for(let i=0; i<lessonsMaxNumber; i++) {
+        for (let i = 0; i < lessonsMaxNumber; i++) {
             lessons.push([]);
         }
 
-        this.props.home.forEach((item,index) => {
-            lessons[item.lesson-1].push(
+        this.props.home.forEach((item, index) => {
+            lessons[item.lesson - 1].push(
                 {
                     type: item.type,
                     name: item.name
@@ -99,24 +97,24 @@ class TableStudents extends React.PureComponent {
                     <tr>
                         <td rowSpan={3}>Слушатели</td>
                         {lessons.map((item, index) => {
-                            return(
-                                <td colSpan={item.length} key={index}>Lesson {index+1}</td>
+                            return (
+                                <td colSpan={item.length} key={index}>Lesson {index + 1}</td>
                             )
                         })}
                     </tr>
                     <tr>
                         {lessons.map((item, index) => {
-                            return item.map((home,home_index) =>{
-                                return(
-                                    <td key={home_index}>{home.type==='main'?'ДЗ':'ДОП'}</td>
+                            return item.map((home, home_index) => {
+                                return (
+                                    <td key={home_index}>{home.type === 'main' ? 'ДЗ' : 'ДОП'}</td>
                                 )
                             })
                         })}
                     </tr>
                     <tr>
                         {lessons.map((item, index) => {
-                            return item.map((home_name,home_name_index) =>{
-                                return(
+                            return item.map((home_name, home_name_index) => {
+                                return (
                                     <td key={home_name_index}>{home_name.name}</td>
                                 )
                             })
@@ -132,10 +130,14 @@ class TableStudents extends React.PureComponent {
                                         {item.lastname + " " + item.name}
                                     </td>
                                     {lessons.map((item, index) => {
-                                        return item.map((check,check_index) =>{
-                                            return(
+                                        return item.map((check, check_index) => {
+                                            return (
                                                 <td key={check_index}>
-                                                    <input type="checkbox"/>
+                                                    <select>
+                                                        <option value="0">Не готово</option>
+                                                        <option value="1">Уточение</option>
+                                                        <option value="2">Выполнено</option>
+                                                    </select>
                                                 </td>
                                             )
                                         })

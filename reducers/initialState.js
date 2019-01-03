@@ -13,6 +13,11 @@ const initState = ( state = [], action) => {
                 ...state,
                 homeList: action.payload
             };
+        case 'LOAD_HOME_AND_USERS':
+            return {
+                ...state,
+                homeAndUsers: action.payload
+            };
         case 'SET_TITLE_GROUP':
             return {
                 ...state,

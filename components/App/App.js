@@ -10,6 +10,7 @@ class App extends Component {
         super(props);
         this.props.onLoadUsers();
         this.props.onLoadHome();
+        this.props.onLoadHomeAndUser();
     }
 
     render() {
@@ -30,7 +31,8 @@ class App extends Component {
 export default connect(
     state => ({
         studentsList: state.studentsList,
-        homeList: state.homeList
+        homeList: state.homeList,
+        homeAndUsers: state.homeAndUsers
     }),
     dispatch => ({
         onLoadUsers: () => {
@@ -52,6 +54,19 @@ export default connect(
                 })
                 .then(data => {
                     dispatch({ type: 'LOAD_HOME', payload: data })
+                })
+                .catch((err) => {
+                    console.log('error', err)
+                });
+        },
+        onLoadHomeAndUser: () => {
+            fetch(URL + 'getUserAndHome.php')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('home and users', data);
+                    dispatch({ type: 'LOAD_HOME_AND_USERS', payload: data })
                 })
                 .catch((err) => {
                     console.log('error', err)

@@ -11,9 +11,11 @@ class SideBar extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
         this.state = {
             ...props
         };
+        this.props.getHeader(this.props.groups[0])
     }
 
     static propTypes = {
