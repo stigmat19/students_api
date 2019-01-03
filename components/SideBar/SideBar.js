@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './SideBar.css';
 import Menu from "../Menu/Menu";
 import TableStudents from "../TableStudents/TableStudents";
 import Modal from "../Modal/Modal";
 import GroupList from "../GroupList/GroupList";
-import URL from "../../const/constants";
+import {connect} from "react-redux";
 
 class SideBar extends React.PureComponent {
 
@@ -13,44 +14,21 @@ class SideBar extends React.PureComponent {
         this.state = {
             ...props
         };
-
-        fetch(URL + 'getUsers.php')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(data => {
-                this.setState({
-                    groups: [...data]
-                }, () => {
-                    //console.log('did mount');
-                })
-            })
-            .catch((err) => {
-                console.log('error', err)
-            });
-
-        fetch(URL + 'getHome.php')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(data => {
-                this.setState({
-                    home: [...data]
-                }, () => {
-                    //console.log('did mount');
-                })
-            })
-            .catch((err) => {
-                console.log('error', err)
-            });
     }
+
+    static propTypes = {
+        groups: PropTypes.array,
+        home: PropTypes.array,
+    };
 
     static defaultProps = {
         openAddDay: false,
         isOpen: false,
         activeGroup: 0,
         modalTitle: 'Title',
-        modalInputs: []
+        modalInputs: [],
+        groups: [],
+        home: []
     };
 
     getCloseModal = (val) => {
@@ -85,7 +63,9 @@ class SideBar extends React.PureComponent {
         //console.log('val', val);
         this.setState({
             activeGroup: val
-        })
+        }, () => {
+            this.props.getHeader(this.props.groups[this.state.activeGroup])
+        });
     };
 
     render() {
@@ -97,9 +77,9 @@ class SideBar extends React.PureComponent {
                     <Menu cbAddDay={this.getValueDay}
                           cbshowGroupList={this.isOpenGroupList}
                           groupListIsOpen={this.state.isOpen}/>
-                    {this.state.groups ? <TableStudents
-                                            user={this.state.groups[this.state.activeGroup].users}
-                                            home={this.state.home}/> : null}
+                    {this.props.groups ? <TableStudents
+                                            user={this.props.groups[this.state.activeGroup].users}
+                                            home={this.props.home}/> : null}
                 </div>
                 <Modal
                     isOpen={this.state.openAddDay}
@@ -112,4 +92,12 @@ class SideBar extends React.PureComponent {
     }
 }
 
-export default SideBar;
+const mapStateToProps = (state) => ({
+   rrr: state
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    getHeader: (title) => dispatch({type: 'SET_TITLE_GROUP', payload: title})
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SideBar);

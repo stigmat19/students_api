@@ -1,14 +1,25 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import './Header.css';
 
 class Header extends React.PureComponent {
+    constructor(props){
+        super(props);
+    }
     render() {
         return (
             <div className="Header__wrap">
-                <p>Группа FD1-78-18</p>
+                <p>Группа {this.props.header}</p>
             </div>
         );
     }
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+    header: state.header
+});
+
+
+
+export default connect(mapStateToProps)(Header);
+// export default Header;

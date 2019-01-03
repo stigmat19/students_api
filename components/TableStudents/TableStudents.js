@@ -45,7 +45,7 @@ class TableStudents extends React.PureComponent {
         currentUser: {
             name: 'Сергей',
             lastname: 'Авраменко',
-            tel: "375111111111111",
+            tel: "375111111111",
             email: 'stigmat19@yanddex.ru',
             groupID: 1
         },
@@ -91,8 +91,6 @@ class TableStudents extends React.PureComponent {
                 }
             )
         });
-
-        console.log('lessons', lessons);
 
         return (
             <div className="TableStudents__wrap">
