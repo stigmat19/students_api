@@ -2,8 +2,6 @@
   width: calc(100vw - 250px);
   padding: 20px;
   color: #fff;
-  display: flex;
-  justify-content: flex-start;
   overflow: scroll;
   & table{
     border-collapse: collapse;
@@ -24,6 +22,15 @@
           height: 100%;
           color: #fff;
           border: none;
+          &[data-homeindex="0"]{
+            background-color: red;
+          }
+          &[data-homeindex="1"]{
+            background-color: orange;
+          }
+          &[data-homeindex="2"]{
+            background-color: green;
+          }
           & option{
             color: #000;
           }
@@ -33,5 +40,8 @@
   }
   &--students p{
     height: 40px;
+  }
+  & > button{
+    margin-left: 0;
   }
 }

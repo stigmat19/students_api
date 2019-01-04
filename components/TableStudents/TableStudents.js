@@ -2,6 +2,8 @@ import React from 'react';
 import './TableStudents.scss';
 import PropTypes from "prop-types";
 import Modal from "../Modal/Modal";
+import {connect} from "react-redux";
+import URL from "../../consts/consts";
 
 class TableStudents extends React.PureComponent {
 
@@ -68,6 +70,44 @@ class TableStudents extends React.PureComponent {
         })
     };
 
+    changeHomeStatus = (e) => {
+
+        const userID = e.target.dataset.userid;
+        const homeIndex = e.target.dataset.homeindex;
+        const status = e.target.value;
+        const homeAndUsersArr = [...this.props.homeAndUsers];
+
+        let data = [
+            ...homeAndUsersArr,
+            {
+                id: homeAndUsersArr.length+1+'',
+                users: userID,
+                home: homeIndex,
+                status: status
+            }
+        ];
+
+        this.props.updateHomeAndUsers(data)
+    };
+
+    saveHomeStatus = () => {
+        const data = [...this.props.homeAndUsers];
+        console.log('data',data);
+        fetch(
+                URL + 'updateHomework.php',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                }
+            )
+            .then(function (response) {
+                return response.json();
+            })
+            .catch((err) => {
+                console.log('error', err)
+            });
+    };
+
 
     render() {
 
@@ -84,6 +124,7 @@ class TableStudents extends React.PureComponent {
         this.props.home.forEach((item, index) => {
             lessons[item.lesson - 1].push(
                 {
+                    id: item.id,
                     type: item.type,
                     name: item.name
                 }
@@ -123,17 +164,20 @@ class TableStudents extends React.PureComponent {
 
                     {/*Список студентов*/}
                     {
-                        this.props.user ? this.props.user.map((item, index) => {
+                        this.props.user ? this.props.user.map((user, user_index) => {
                             return (
-                                <tr key={index}>
-                                    <td onDoubleClick={this.getPersonInfo} data-id={index}>
-                                        {item.lastname + " " + item.name}
+                                <tr key={user_index}>
+                                    <td onDoubleClick={this.getPersonInfo} data-id={user_index}>
+                                        {user.lastname + " " + user.name}
                                     </td>
-                                    {lessons.map((item, index) => {
-                                        return item.map((check, check_index) => {
+                                    {lessons.map((lesson, lesson_index) => {
+                                        return lesson.map((check, check_index) => {
+                                            console.log('homeAndUsers',this.props.homeAndUsers);
                                             return (
                                                 <td key={check_index}>
-                                                    <select>
+                                                    <select onChange={this.changeHomeStatus}
+                                                            data-userid={user.id}
+                                                            data-homeindex={check.id}>
                                                         <option value="0">Не готово</option>
                                                         <option value="1">Уточение</option>
                                                         <option value="2">Выполнено</option>
@@ -148,6 +192,7 @@ class TableStudents extends React.PureComponent {
                     }
                     </tbody>
                 </table>
+                <button onClick={this.saveHomeStatus}>Сохранить</button>
                 <Modal isOpen={this.state.modalIsOpen}
                        title={'Информация о студенте'}
                        cbCloseModal={this.closeModal}>
@@ -167,4 +212,13 @@ class TableStudents extends React.PureComponent {
     }
 }
 
-export default TableStudents;
+const mapStateToProps = (state) => ({
+    homeAndUsers: state.homeAndUsers
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    updateHomeAndUsers: (data) => dispatch({ type: 'LOAD_HOME_AND_USERS', payload: data })
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(TableStudents);

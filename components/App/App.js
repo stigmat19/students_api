@@ -65,7 +65,6 @@ export default connect(
                     return response.json();
                 })
                 .then(data => {
-                    console.log('home and users', data);
                     dispatch({ type: 'LOAD_HOME_AND_USERS', payload: data })
                 })
                 .catch((err) => {
