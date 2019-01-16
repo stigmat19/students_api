@@ -11,7 +11,13 @@ class TableStudents extends React.PureComponent {
         super(props);
         this.state = {
             ...props
-        }
+        };
+        this.scrollTable = null;
+        this.scrollTr    = null;
+    }
+
+    componentDidMount() {
+        this.scrollTable&&this.scrollTable.addEventListener('scroll', this.handleScroll);
     }
 
     static propTypes = {
@@ -70,17 +76,30 @@ class TableStudents extends React.PureComponent {
         })
     };
 
+    handleScroll = () => {
+        const value = this.scrollTable.scrollTop;
+        if(this.scrollTable.scrollTop >= 100){
+            this.scrollTr.style.top = (value-20)+'px';
+            this.scrollTr.style.position = 'absolute';
+            this.scrollTr.style.backgroundColor = '#303030';
+            this.scrollTr.style.left = '100px';
+        }
+        else{
+            this.scrollTr.style.position = 'static';
+        }
+    };
+
     changeHomeStatus = (e) => {
 
         const userID = e.target.dataset.userid;
-        const homeIndex = e.target.dataset.homeindex;
+        const homeIndex = (e.target.dataset.homeindex) + '';
         const status = e.target.value;
         const homeAndUsersArr = [...this.props.homeAndUsers];
 
         let data = [
             ...homeAndUsersArr,
             {
-                id: homeAndUsersArr.length+1+'',
+                id: homeAndUsersArr.length + 1 + '',
                 users: userID,
                 home: homeIndex,
                 status: status
@@ -91,26 +110,30 @@ class TableStudents extends React.PureComponent {
     };
 
     saveHomeStatus = () => {
-        const data = [...this.props.homeAndUsers];
-        console.log('data',data);
+        const data = JSON.stringify([...this.props.homeAndUsers]);
+        const fd = new FormData();
+        fd.append("home", data);
         fetch(
                 URL + 'updateHomework.php',
                 {
                     method: 'POST',
-                    body: JSON.stringify(data)
+                    body: fd
                 }
-            )
-            .then(function (response) {
-                return response.json();
-            })
-            .catch((err) => {
-                console.log('error', err)
-            });
+        )
+                .then((res, req) => {
+                    console.log('res', res);
+                    console.log('req', req);
+                    if (res.status === 200) {
+                        alert('Данные обновлены');
+                    }
+                })
+                .catch((err) => {
+                    console.log('error', err)
+                });
     };
 
 
     render() {
-
         const lessonsMaxNumber = Math.max.apply(null, this.props.home.map((item) => {
             return parseInt(item.lesson);
         }));
@@ -123,91 +146,115 @@ class TableStudents extends React.PureComponent {
 
         this.props.home.forEach((item, index) => {
             lessons[item.lesson - 1].push(
-                {
-                    id: item.id,
-                    type: item.type,
-                    name: item.name
-                }
+                    {
+                        id: item.id,
+                        type: item.type,
+                        name: item.name
+                    }
             )
         });
 
-        return (
-            <div className="TableStudents__wrap">
-                <table>
-                    <tbody>
-                    <tr>
-                        <td rowSpan={3}>Слушатели</td>
-                        {lessons.map((item, index) => {
-                            return (
-                                <td colSpan={item.length} key={index}>Lesson {index + 1}</td>
-                            )
-                        })}
-                    </tr>
-                    <tr>
-                        {lessons.map((item, index) => {
-                            return item.map((home, home_index) => {
-                                return (
-                                    <td key={home_index}>{home.type === 'main' ? 'ДЗ' : 'ДОП'}</td>
-                                )
-                            })
-                        })}
-                    </tr>
-                    <tr>
-                        {lessons.map((item, index) => {
-                            return item.map((home_name, home_name_index) => {
-                                return (
-                                    <td key={home_name_index}>{home_name.name}</td>
-                                )
-                            })
-                        })}
-                    </tr>
+        let users = this.props.user;
 
-                    {/*Список студентов*/}
-                    {
-                        this.props.user ? this.props.user.map((user, user_index) => {
-                            return (
-                                <tr key={user_index}>
-                                    <td onDoubleClick={this.getPersonInfo} data-id={user_index}>
-                                        {user.lastname + " " + user.name}
-                                    </td>
-                                    {lessons.map((lesson, lesson_index) => {
-                                        return lesson.map((check, check_index) => {
-                                            console.log('homeAndUsers',this.props.homeAndUsers);
-                                            return (
-                                                <td key={check_index}>
-                                                    <select onChange={this.changeHomeStatus}
-                                                            data-userid={user.id}
-                                                            data-homeindex={check.id}>
-                                                        <option value="0">Не готово</option>
-                                                        <option value="1">Уточение</option>
-                                                        <option value="2">Выполнено</option>
-                                                    </select>
-                                                </td>
-                                            )
-                                        })
-                                    })}
-                                </tr>
-                            )
-                        }) : null
+        for (let k = 0; k < users.length; k++) {
+            let homeArr = [];
+            for (let i = 0; i < this.props.home.length; i++) {
+                homeArr.push({users: users[k].id, home: this.props.home[i].id, status: "0"});
+            }
+            users[k].home = [...homeArr];
+        }
+
+        if (this.props.homeAndUsers) {
+            for (let k = 0; k < this.props.homeAndUsers.length; k++) {
+                for (let j = 0; j < users.length; j++) {
+                    if (this.props.homeAndUsers[k].users === users[j].id) {
+                        users[j].home[parseInt(this.props.homeAndUsers[k].home)] = {
+                            users: this.props.homeAndUsers[k].users,
+                            home: this.props.homeAndUsers[k].home,
+                            status: this.props.homeAndUsers[k].status
+                        }
                     }
-                    </tbody>
-                </table>
-                <button onClick={this.saveHomeStatus}>Сохранить</button>
-                <Modal isOpen={this.state.modalIsOpen}
-                       title={'Информация о студенте'}
-                       cbCloseModal={this.closeModal}>
-                    <div className="current__user">
-                        <h1>{this.state.currentUser.lastname + " " + this.state.currentUser.name}</h1>
-                        <h2>{'+' + this.state.currentUser.tel}</h2>
-                        <h2>{'Email: ' + this.state.currentUser.email}</h2>
-                        <button>Редактировать</button>
-                        <button>Удалить</button>
-                        {/*<div className="homework">*/}
-                        {/*Домашние задания*/}
-                        {/*</div>*/}
-                    </div>
-                </Modal>
-            </div>
+                }
+            }
+        }
+
+
+        return (
+                <div className="TableStudents__wrap" ref={(ref) => {this.scrollTable = ref}}>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td rowSpan={3}>Слушатели</td>
+                            {lessons.map((item, index) => {
+                                return (
+                                        <td colSpan={item.length} key={index}>Lesson {index + 1}</td>
+                                )
+                            })}
+                        </tr>
+                        <tr>
+                            {lessons.map((item, index) => {
+                                return item.map((home, home_index) => {
+                                    return (
+                                            <td key={home_index}>{home.type === 'main' ? 'ДЗ' : 'ДОП'}</td>
+                                    )
+                                })
+                            })}
+                        </tr>
+                        <tr ref={(ref) => {this.scrollTr = ref}}>
+                            {lessons.map((item, index) => {
+                                return item.map((home_name, home_name_index) => {
+                                    return (
+                                            <td key={home_name_index}>{home_name.name}</td>
+                                    )
+                                })
+                            })}
+                        </tr>
+
+                        {/*Список студентов*/}
+                        {
+                            users ? users.map((user, user_index) => {
+                                return (
+                                        <tr key={user_index}>
+                                            <td onDoubleClick={this.getPersonInfo} data-id={user_index}>
+                                                {user.lastname + " " + user.name}
+                                            </td>
+                                            {user.home.map((home_item, home_index) => {
+                                                return (
+                                                        <td key={home_index}>
+                                                            <select onChange={this.changeHomeStatus}
+                                                                    value={home_item.status}
+                                                                    data-userid={user.id}
+                                                                    data-homeindex={home_item.home}
+                                                                    data-status={home_item.status}>
+                                                                <option value="0">Не готово</option>
+                                                                <option value="1">Уточение</option>
+                                                                <option value="2">Выполнено</option>
+                                                            </select>
+                                                        </td>
+                                                )
+                                            })}
+                                        </tr>
+                                )
+                            }) : null
+                        }
+                        </tbody>
+                    </table>
+                    <button onClick={this.saveHomeStatus}>Сохранить</button>
+                    <Modal isOpen={this.state.modalIsOpen}
+                           title={'Информация о студенте'}
+                           cbCloseModal={this.closeModal}>
+                        <div className="current__user">
+                            <h1>{this.state.currentUser.lastname + " " + this.state.currentUser.name}</h1>
+                            <h2>{'+' + this.state.currentUser.tel}</h2>
+                            <h2>{'Email: ' + this.state.currentUser.email}</h2>
+                            <button>Редактировать</button>
+                            <button>Удалить</button>
+                            {/*<div className="homework">*/}
+                            {/*Домашние задания*/}
+                            {/*</div>*/}
+                        </div>
+                    </Modal>
+                </div>
         );
     }
 }
@@ -217,7 +264,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    updateHomeAndUsers: (data) => dispatch({ type: 'LOAD_HOME_AND_USERS', payload: data })
+    updateHomeAndUsers: (data) => dispatch({type: 'LOAD_HOME_AND_USERS', payload: data})
 });
 
 

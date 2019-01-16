@@ -1,47 +1,51 @@
-.TableStudents__wrap{
-  width: calc(100vw - 250px);
-  padding: 20px;
-  color: #fff;
-  overflow: scroll;
-  & table{
-    border-collapse: collapse;
-    text-align: center;
-    & tr{
-      border: 1px solid #fff;
-      &:hover{
-        background-color: #6b6b6b;
-      }
-      & td{
-        padding: 5px;
-        height: 40px;
-        border: 1px solid #fff;
-        min-width: 95px;
-        & select{
-          background-color: transparent;
-          width: 100%;
-          height: 100%;
-          color: #fff;
-          border: none;
-          &[data-homeindex="0"]{
-            background-color: red;
-          }
-          &[data-homeindex="1"]{
-            background-color: orange;
-          }
-          &[data-homeindex="2"]{
-            background-color: green;
-          }
-          & option{
-            color: #000;
-          }
+.TableStudents__wrap {
+    width: calc(100vw - 250px);
+    padding: 20px;
+    color: #fff;
+    overflow: scroll;
+    & table {
+        border-collapse: collapse;
+        text-align: center;
+        table-layout: fixed;
+        position: relative;
+        & tr {
+            &:nth-child(3){
+                transition: 0.2s;
+            }
+            &:hover {
+                background-color: #6b6b6b;
+            }
+            & td {
+                padding: 5px;
+                height: 40px;
+                border: 1px solid #fff;
+                min-width: 95px;
+                & select {
+                    background-color: transparent;
+                    width: 100%;
+                    height: 100%;
+                    color: #fff;
+                    border: none;
+                    &[data-status="0"] {
+                        background-color: rgba(98, 30, 30, 0.7);
+                    }
+                    &[data-status="1"] {
+                        background-color: orange;
+                    }
+                    &[data-status="2"] {
+                        background-color: green;
+                    }
+                    & option {
+                        color: #000;
+                    }
+                }
+            }
         }
-      }
     }
-  }
-  &--students p{
-    height: 40px;
-  }
-  & > button{
-    margin-left: 0;
-  }
+    &--students p {
+        height: 40px;
+    }
+    & > button {
+        margin-left: 0;
+    }
 }
