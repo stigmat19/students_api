@@ -13,11 +13,11 @@ class TableStudents extends React.PureComponent {
             ...props
         };
         this.scrollTable = null;
-        this.scrollTr    = null;
+        this.scrollTr = null;
     }
 
     componentDidMount() {
-        this.scrollTable&&this.scrollTable.addEventListener('scroll', this.handleScroll);
+        this.scrollTable && this.scrollTable.addEventListener('scroll', this.handleScroll);
     }
 
     static propTypes = {
@@ -78,13 +78,13 @@ class TableStudents extends React.PureComponent {
 
     handleScroll = () => {
         const value = this.scrollTable.scrollTop;
-        if(this.scrollTable.scrollTop >= 100){
-            this.scrollTr.style.top = (value-20)+'px';
+        if (this.scrollTable.scrollTop >= 100) {
+            this.scrollTr.style.top = (value - 20) + 'px';
             this.scrollTr.style.position = 'absolute';
             this.scrollTr.style.backgroundColor = '#303030';
             this.scrollTr.style.left = '100px';
         }
-        else{
+        else {
             this.scrollTr.style.position = 'static';
         }
     };
@@ -180,7 +180,9 @@ class TableStudents extends React.PureComponent {
 
 
         return (
-                <div className="TableStudents__wrap" ref={(ref) => {this.scrollTable = ref}}>
+                <div className="TableStudents__wrap" ref={(ref) => {
+                    this.scrollTable = ref
+                }}>
                     <table>
                         <tbody>
                         <tr>
@@ -200,7 +202,9 @@ class TableStudents extends React.PureComponent {
                                 })
                             })}
                         </tr>
-                        <tr ref={(ref) => {this.scrollTr = ref}}>
+                        <tr ref={(ref) => {
+                            this.scrollTr = ref
+                        }}>
                             {lessons.map((item, index) => {
                                 return item.map((home_name, home_name_index) => {
                                     return (
@@ -244,14 +248,52 @@ class TableStudents extends React.PureComponent {
                            title={'Информация о студенте'}
                            cbCloseModal={this.closeModal}>
                         <div className="current__user">
-                            <h1>{this.state.currentUser.lastname + " " + this.state.currentUser.name}</h1>
-                            <h2>{'+' + this.state.currentUser.tel}</h2>
-                            <h2>{'Email: ' + this.state.currentUser.email}</h2>
-                            <button>Редактировать</button>
-                            <button>Удалить</button>
-                            {/*<div className="homework">*/}
-                            {/*Домашние задания*/}
-                            {/*</div>*/}
+                            <div className="current__user--wrap">
+                                <div className="current__user--photo">
+                                    <img src="../../img/my.jpg" alt="photo"/>
+                                    <button>Редактировать</button>
+                                    <button>Удалить</button>
+                                </div>
+                                <div className="current__user--info">
+                                    <h1>{this.state.currentUser.lastname + " " + this.state.currentUser.name}</h1>
+                                    <p>{'Телефон: +' + this.state.currentUser.tel}</p>
+                                    <p>{'Email: ' + this.state.currentUser.email}</p>
+                                    <p>Работа: Сервис-деск</p>
+                                    <p>Должность: Инженер-программист</p>
+                                    <p>Учеба: БГУ</p>
+                                    <h2>Посещаемость</h2>
+                                    <div className="current__user--info--table">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td>11.12.13</td>
+                                                <td>16.12.13</td>
+                                                <td>16.12.13</td>
+                                                <td>16.12.13</td>
+                                                <td>16.12.13</td>
+                                                <td>16.12.13</td>
+                                                <td>16.12.13</td>
+                                                <td>16.12.13</td>
+                                                <td>16.12.13</td>
+                                                <td>16.12.13</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i className="fas fa-check"/></td>
+                                                <td><i className="fas fa-times"/></td>
+                                                <td><i className="fas fa-check"/></td>
+                                                <td><i className="fas fa-times"/></td>
+                                                <td><i className="fas fa-check"/></td>
+                                                <td><i className="fas fa-times"/></td>
+                                                <td><i className="fas fa-check"/></td>
+                                                <td><i className="fas fa-times"/></td>
+                                                <td><i className="fas fa-check"/></td>
+                                                <td><i className="fas fa-times"/></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </Modal>
                 </div>
